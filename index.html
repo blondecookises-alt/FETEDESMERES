@@ -472,10 +472,10 @@ function drawHome() {
   drawCookie(mx+48,previewY,25,true,0);
 
   // ── Bouton ──
-  hBtn=drawBtn('Jouer maintenant',mx,H-76,230,52,NAVY,CREAM);
+  hBtn=drawBtn('Jouer maintenant',mx,H-92,230,52,NAVY,CREAM);
   ctx.fillStyle=TXTSUB; ctx.font='400 10px Inter,sans-serif';
   ctx.textAlign='center'; ctx.textBaseline='alphabetic';
-  ctx.fillText('1 code par personne · 1 seule commande',mx,H-48);
+  ctx.fillText('1 code par personne · 1 seule commande',mx,H-52);
 }
 
 // ── EXPLAIN ───────────────────────────────────────────────────
@@ -657,58 +657,71 @@ function drawResult() {
     copyBtn=null; orderBtn=null;
 
   }else{
-    // ── VICTOIRE ──
+    // ── VICTOIRE — layout en flux, pas de pinning ──
     var isMaman5=(prizeType==='maman5');
     var accent=isMaman5?GOLD:PINK;
+    var curY=16;
 
-    // carte principale
-    var mainCardY=70, mainCardH=230;
-    drawCard(pad,mainCardY,W-pad*2,mainCardH,20);
+    // ── Carte principale ──
+    var cardH=182;
+    drawCard(pad,curY,W-pad*2,cardH,18);
 
-    ctx.font='40px sans-serif'; ctx.textBaseline='middle';
-    ctx.fillText(isMaman5?'\u{1F389}':'\u{1F36A}',mx,mainCardY+46);
+    ctx.font='36px sans-serif'; ctx.textBaseline='middle';
+    ctx.fillText(isMaman5?'\u{1F389}':'\u{1F36A}',mx,curY+38);
     ctx.fillStyle=NAVY;
-    ctx.font="700 24px 'Playfair Display',Georgia,serif"; ctx.textBaseline='alphabetic';
-    ctx.fillText('Felicitations !',mx,mainCardY+100);
-    ctx.fillStyle=accent; ctx.font='600 14px Inter,sans-serif';
-    ctx.fillText(isMaman5?'-5% sur ta commande':'1 cookie Maman offert !',mx,mainCardY+126);
+    ctx.font="700 22px 'Playfair Display',Georgia,serif"; ctx.textBaseline='alphabetic';
+    ctx.fillText('Felicitations !',mx,curY+88);
+    ctx.fillStyle=accent; ctx.font='600 13px Inter,sans-serif';
+    ctx.fillText(isMaman5?'-5% sur ta commande':'1 cookie Maman offert !',mx,curY+112);
 
-    // code
-    ctx.fillStyle=TXTSUB; ctx.font='400 11px Inter,sans-serif';
-    ctx.fillText('Ton code unique :',mx,mainCardY+154);
-    rrPath(pad+16,mainCardY+162,W-pad*2-32,46,10);
+    ctx.fillStyle=TXTSUB; ctx.font='400 10px Inter,sans-serif';
+    ctx.fillText('Ton code unique :',mx,curY+136);
+    // code box (intérieur carte)
+    rrPath(pad+14,curY+144,W-pad*2-28,40,9);
     ctx.fillStyle=BG; ctx.fill();
-    ctx.strokeStyle=accent; ctx.lineWidth=2; ctx.stroke();
-    ctx.fillStyle=TXT; ctx.font='bold 20px Courier New,monospace'; ctx.textBaseline='middle';
-    ctx.fillText(prizeCode,mx,mainCardY+185);
+    ctx.strokeStyle=accent; ctx.lineWidth=1.8; ctx.stroke();
+    ctx.fillStyle=TXT; ctx.font='bold 19px Courier New,monospace'; ctx.textBaseline='middle';
+    ctx.fillText(prizeCode,mx,curY+164);
 
-    // bouton copier
-    copyBtn=drawBtn(codeCopied?'✓ Code copie !':'Copier le code',mx,mainCardY+235,196,44,accent,'#fff');
+    curY+=cardH+12;
+
+    // ── Bouton copier ──
+    copyBtn=drawBtn(codeCopied?'✓ Code copie !':'Copier le code',mx,curY+22,200,42,accent,'#fff');
+    curY+=42+16;
 
     // ── CTA commander ──
-    var ctaY=mainCardY+mainCardH+14, ctaH=54;
-    drawCard(pad,ctaY,W-pad*2,ctaH,14);
-    orderBtn=drawBtn('Commander sur le site →',mx,ctaY+ctaH/2,W-pad*2-4,ctaH-4,NAVY,CREAM);
+    rrPath(pad,curY,W-pad*2,50,14);
+    ctx.fillStyle=NAVY; ctx.fill();
+    orderBtn={x:pad, y:curY, w:W-pad*2, h:50};
+    ctx.fillStyle=CREAM; ctx.font='600 15px Inter,sans-serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('Commander sur le site →',mx,curY+25);
+    curY+=50+12;
 
-    // instructions
-    var instrY=ctaY+ctaH+10, instrH=68;
-    rrPath(pad,instrY,W-pad*2,instrH,12);
-    ctx.fillStyle='rgba(0,10,137,0.06)'; ctx.fill();
-    ctx.strokeStyle='rgba(0,10,137,0.15)'; ctx.lineWidth=1; ctx.stroke();
+    // ── Encadré instructions ──
+    var instrH=76;
+    rrPath(pad,curY,W-pad*2,instrH,12);
+    ctx.fillStyle='rgba(0,10,137,0.05)'; ctx.fill();
+    ctx.strokeStyle='rgba(0,10,137,0.18)'; ctx.lineWidth=1; ctx.stroke();
 
-    ctx.fillStyle=TXT; ctx.font='500 12px Inter,sans-serif'; ctx.textBaseline='middle';
-    ctx.fillText('Indique ton code dans le champ',mx,instrY+17);
-    ctx.fillStyle=NAVY; ctx.font='600 12px Inter,sans-serif';
-    ctx.fillText('"Message" lors du paiement.',mx,instrY+33);
+    ctx.fillStyle=TXT; ctx.font='500 12px Inter,sans-serif'; ctx.textBaseline='alphabetic';
+    ctx.fillText('Indique ton code dans le champ',mx,curY+20);
+    ctx.fillStyle=NAVY; ctx.font='600 13px Inter,sans-serif';
+    ctx.fillText('"Message" lors du paiement.',mx,curY+38);
+    ctx.strokeStyle='rgba(0,10,137,0.12)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pad+20,curY+48); ctx.lineTo(W-pad-20,curY+48); ctx.stroke();
     ctx.fillStyle=TXTSUB; ctx.font='400 10px Inter,sans-serif';
-    ctx.fillText('1 code par personne · valable pour 1 seule commande',mx,instrY+52);
+    ctx.fillText('1 code par personne · 1 seule commande',mx,curY+62);
+    curY+=instrH+8;
 
     if(!isMaman5){
-      ctx.fillStyle=TXTSUB; ctx.font='400 10px Inter,sans-serif'; ctx.textBaseline='alphabetic';
-      ctx.fillText('Sur presentation en boutique ou commande.',mx,instrY+instrH+12);
+      ctx.fillStyle=TXTSUB; ctx.font='400 10px Inter,sans-serif';
+      ctx.fillText('Sur presentation en boutique ou commande.',mx,curY+14);
+      curY+=24;
     }
 
-    replayBtn=drawBtnOutline('Rejouer',mx,H-52,120,36,TXTSUB);
+    curY+=20;
+    replayBtn=drawBtnOutline('Rejouer',mx,curY+18,120,36,TXTSUB);
   }
 }
 
@@ -733,7 +746,11 @@ function loop(now) {
         if(navigator.clipboard) navigator.clipboard.writeText(prizeCode).catch(function(){});
         codeCopied=true;
       }else if(hit(orderBtn)){
-        window.open('https://blondecookises-alt.github.io/Carte/','_blank');
+        // Méthode fiable sur Safari iOS
+        var a=document.createElement('a');
+        a.href='https://blondecookises-alt.github.io/Carte/';
+        a.target='_blank'; a.rel='noopener noreferrer';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
       }else if(hit(replayBtn)){
         prizeType='';prizeCode='';codeCopied=false;
         wheelDone=false;wheelAngle=0;wheelSpinning=false;
